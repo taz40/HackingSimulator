@@ -5,7 +5,8 @@ public class ServerMapController : MonoBehaviour {
 
     public Sprite serverTexture;
     ServerMap map;
-    Dictionary<Server, GameObject> serverGameObjects;
+    public static Dictionary<Server, GameObject> serverGameObjects;
+    public Material ConnectionMat;
 
 	// Use this for initialization
 	void Start () {
@@ -17,7 +18,7 @@ public class ServerMapController : MonoBehaviour {
                 if (s != null) {
                     GameObject serverGO = new GameObject();
                     serverGO.name = "Server_" + tier + "_" + server;
-                    serverGO.transform.position = new Vector3(tier, server, 0);
+                    serverGO.transform.position = new Vector3(tier, server, -1);
                     serverGO.transform.SetParent(transform, false);
                     serverGO.AddComponent<BoxCollider2D>();
                     MouseController serverMC = serverGO.AddComponent<MouseController>();
@@ -32,6 +33,17 @@ public class ServerMapController : MonoBehaviour {
                     }
                     serverGameObjects.Add(s, serverGO);
                     s.RegisterServerChangedCallback(onServerChanged);
+                    foreach (Server conn in s.connections)
+                    {
+                        GameObject connectionGO = new GameObject();
+                        connectionGO.name = "Connection";
+                        connectionGO.transform.SetParent(serverGO.transform);
+                        LineRenderer lr = connectionGO.AddComponent<LineRenderer>();
+                        lr.material = ConnectionMat;
+                        ServerConnection connection = connectionGO.AddComponent<ServerConnection>();
+                        connection.src = s;
+                        connection.dest = conn;
+                    }
                 }
             }
         }

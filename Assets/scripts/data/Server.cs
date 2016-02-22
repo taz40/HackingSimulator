@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Server {
 
     Action<Server> onServerChanged;
+
+    public List<Server> connections;
 
     int team;
 
@@ -21,7 +23,8 @@ public class Server {
     }
 
     public Server() {
-        Team = UnityEngine.Random.Range(0, 3);
+        connections = new List<Server>();
+        Team = 0;
     }
 
     public void RegisterServerChangedCallback(Action<Server> cb) {

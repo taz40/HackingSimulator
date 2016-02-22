@@ -11,6 +11,7 @@ public class ServerMap {
 
     public void generateServerMap() {
         generateServers();
+        generateServerConnections();
     }
 
     public void generateServers() {
@@ -28,6 +29,36 @@ public class ServerMap {
             }
         }
 
+    }
+
+    public int countServersInTier(int tier) {
+        int numberOfServers = 0;
+        for (int i = 0; i < 4; i++) {
+            if (servers[tier, i] != null)
+                numberOfServers++;
+        }
+        return numberOfServers;
+    }
+
+    public void generateServerConnections() {
+        for (int tier = 0; tier < 9; tier++) {
+            for (int server = 0; server < 4; server++) {
+                Server s = servers[tier, server];
+                if (s != null) {
+                    int numberOfServersInNextTier = countServersInTier(tier + 1);
+                    int numOfConnections = Random.Range(1, numberOfServersInNextTier+1);
+                    List<int> taken = new List<int>();
+                    for (int connection = 0; connection < numOfConnections; connection++) {
+                        int connectedServer = Random.Range(0, 4);
+                        while (taken.Contains(connectedServer) || servers[tier+1, connectedServer] == null) {
+                            connectedServer = Random.Range(0, 4);
+                        }
+                        s.connections.Add(servers[tier+1, connectedServer]);
+                        taken.Add(connectedServer);
+                    }
+                }
+            }
+        }
     }
 
 }

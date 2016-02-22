@@ -16,9 +16,8 @@ public class MouseController : MonoBehaviour {
 	}
 
     void OnMouseDown() {
-        s.Team += 1;
-        if (s.Team == 3) {
+        s.Team++;
+        if (s.Team == 3)
             s.Team = 0;
-        }
     }
 }
